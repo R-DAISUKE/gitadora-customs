@@ -85,11 +85,12 @@ def read_vas1(input_filename, input_fre_filename, output_folder, force_hex=False
         # entry_unk4 seems to always be 255??
         metadata_offset, offset, filesize = struct.unpack("<III", data[entry_start+(i*0x0c):entry_start+(i*0x0c)+0x0c])
         metadata_unk1_1, volume, pan, sound_id, instrument_id, metadata_unk2_2, metadata_unk2_3, metadata_unk2_4, metadata_unk3, sample_rate = struct.unpack("<BBBBBBBBHH", data[entry_start+metadata_offset+(entry_count*0x0c):entry_start+metadata_offset+(entry_count*0x0c)+0x0c])
-        sample_rate *= 2
+        # sample_rate *= 3
+        sample_rate = 22050
 
         #output_filename = os.path.join(basepath, "{}.wav".format(entry['filename']))
 
-        #print("%04x | %08x %08x %08x | %02x %02x %02x %02x  %02x %02x %02x %02x  %04x  %04x | %08x" % (i, metadata_offset, offset, filesize, metadata_unk1_1, volume, pan, sound_id, instrument_id, metadata_unk2_2, metadata_unk2_3, metadata_unk2_4, sample_rate, metadata_unk3, entry_start+metadata_offset+(entry_count*0x0c)))
+        print("%04x | %08x %08x %08x | %02x %02x %02x %02x  %02x %02x %02x %02x  %04x  %04x | %08x | %08x %d" % (i, metadata_offset, offset, filesize, metadata_unk1_1, volume, pan, sound_id, instrument_id, metadata_unk2_2, metadata_unk2_3, metadata_unk2_4, sample_rate, metadata_unk3, entry_start+metadata_offset+(entry_count*0x0c), sample_rate, sample_rate))
 
         offset += ((entry_count * 0x0c) * 2) + 4
 

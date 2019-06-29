@@ -1,5 +1,5 @@
-# Gitadora Re:evolve SQ3 format
 import argparse
+import copy
 import glob
 import importlib
 import json
@@ -22,6 +22,9 @@ running_threads = []
 
 
 def find_handler(input_filename, input_format):
+    if not input_filename:
+        return None
+
     formats = [importlib.import_module('plugins.' + name).get_class() for name in plugins.__all__]
 
     for handler in formats:
@@ -142,9 +145,21 @@ def get_sound_metadata(sound_folder, game_type=None):
 
 
 def add_task(params):
-    parse_thread = threading.Thread(target=process_file, args=(params,))
-    parse_thread.start()
-    running_threads.append(parse_thread)
+    def _add_task(params):
+        if 'input' in params and params['input']:
+            parse_thread = threading.Thread(target=process_file, args=(params,))
+            parse_thread.start()
+            running_threads.append(parse_thread)
+
+
+    input_split = params.get('input_split', [])
+    for f in input_split:
+        for f2 in input_split[f]:
+            params_copy = copy.deepcopy(params)
+            params_copy['input'] = input_split[f][f2]
+            _add_task(params_copy)
+
+    _add_task(params)
 
 
 def run_tasks():
