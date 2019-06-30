@@ -22,9 +22,6 @@ running_threads = []
 
 
 def find_handler(input_filename, input_format):
-    if not input_filename:
-        return None
-
     formats = [importlib.import_module('plugins.' + name).get_class() for name in plugins.__all__]
 
     for handler in formats:
