@@ -95,13 +95,6 @@ class Gsq2Format:
 
     @staticmethod
     def is_format(filename):
-        header = open(filename, "rb").read(0x04)
-
-        try:
-            return header[0x00:0x04].decode('ascii') == "GSQ1"
-        except:
-            return False
-
         return False
 
 
