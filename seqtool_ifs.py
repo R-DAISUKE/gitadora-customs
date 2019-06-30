@@ -92,8 +92,7 @@ def main():
 
     sound_folder = args.output
 
-    if not os.path.exists(sound_folder):
-        os.makedirs(sound_folder)
+    os.makedirs(sound_folder, exist_ok=True)
 
     if args.input_ifs_bgm:
         if os.path.isdir(args.input_ifs_bgm):

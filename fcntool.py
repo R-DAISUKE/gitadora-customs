@@ -41,7 +41,6 @@ def dump_fcn(input_filename, output_folder=None):
 if __name__ == "__main__":
     basepath = os.path.splitext(sys.argv[1])[0]
 
-    if not os.path.exists(basepath):
-        os.makedirs(basepath)
+    os.makedirs(basepath, exist_ok=True)
 
     dump_fcn(sys.argv[1], basepath)

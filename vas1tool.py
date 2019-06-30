@@ -103,8 +103,7 @@ def read_vas1(input_filename, input_fre_filename, output_folder, force_hex=False
     else:
         basepath = os.path.splitext(os.path.basename(input_filename))[0]
 
-    if not os.path.exists(basepath):
-        os.makedirs(basepath)
+    os.makedirs(basepath, exist_ok=True)
 
     metadata = {
         'type': "GDXG" if is_guitar else "GDXH",

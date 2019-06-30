@@ -323,8 +323,7 @@ def read_vas3(input_filename, output_folder, force_hex=False, mix_audio=False, f
     else:
         basepath = os.path.splitext(os.path.basename(input_filename))[0]
 
-    if not os.path.exists(basepath):
-        os.makedirs(basepath)
+    os.makedirs(basepath, exist_ok=True)
 
     for entry in entries:
         # print("Extracting", entry['filename'])

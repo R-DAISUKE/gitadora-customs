@@ -491,11 +491,7 @@ def create_song_data_ifs_for_package(package, ifs_data_folder="data\\ifs_pack"):
     seq_ifs_outputfile = os.path.join(output_folder, "m%04d_seq.ifs" % package['music_id'])
     bgm_ifs_outputfile = os.path.join(output_folder, "m%04d_bgm.ifs" % package['music_id'])
 
-    try:
-        os.makedirs(output_folder)
-    except OSError:
-        # Folder already exists
-        pass
+    os.makedirs(output_folder, exist_ok=True)
 
     seq_folder = tmpfile.mkdtemp("seq")
     bgm_folder = tmpfile.mkdtemp("bgm")
@@ -541,11 +537,7 @@ def create_song_data_ifs_for_package(package, ifs_data_folder="data\\ifs_pack"):
 def create_graphic_ifs_for_packages(packages, key, base_filename, output_filename):
     output_directory = os.path.dirname(output_filename)
 
-    try:
-        os.makedirs(output_directory)
-    except OSError:
-        # Folder already exists
-        pass
+    os.makedirs(output_directory, exist_ok=True)
 
     _, ifs_path = ifs.extract(output_filename)
 
@@ -736,8 +728,8 @@ def save_notes_info(filename, notes_info):
         ) for x in sorted(notes_info.keys(), key=lambda x:int(x))]
     )
 
-    if not os.path.exists(filename) and not os.path.exists(os.path.dirname(filename)):
-        os.makedirs(os.path.dirname(filename))
+    if not os.path.exists(filename):
+        os.makedirs(os.path.dirname(filename), exist_ok=True)
 
     open(filename, "w", encoding="utf-8").write(etree.tostring(note_info_tree, encoding='unicode', pretty_print=True))
 
@@ -915,8 +907,8 @@ def save_phrase_address_list(filename, pal):
         )
     )
 
-    if not os.path.exists(filename) and not os.path.exists(os.path.dirname(filename)):
-        os.makedirs(os.path.dirname(filename))
+    if not os.path.exists(filename):
+        os.makedirs(os.path.dirname(filename), exist_ok=True)
 
     open(filename, "w", encoding="utf-8").write(etree.tostring(pal_tree, encoding='unicode', pretty_print=True))
 
@@ -1054,11 +1046,7 @@ def create_graphic_texbin_for_packages(packages, key, base_filename, output_file
     output_filename = os.path.abspath(output_filename)
     texbin_directory = os.path.splitext(output_filename)[0]
 
-    try:
-        os.makedirs(texbin_directory)
-    except OSError:
-        # Folder already exists
-        pass
+    os.makedirs(texbin_directory, exist_ok=True)
 
     tmpfile.add_temp_folder(texbin_directory)
 
