@@ -4,7 +4,7 @@ import struct
 from plugins.gsq import EVENT_ID_MAP, NOTE_MAPPING, generate_json_from_data
 
 
-def read_gsq2_data(data, events, other_params):
+def read_gsq3_data(data, events, other_params):
     def parse_event_block(mdata, game):
         packet_data = {}
 
@@ -78,15 +78,15 @@ def read_gsq2_data(data, events, other_params):
     return output
 
 
-class Gsq2Format:
+class Gsq3Format:
     @staticmethod
     def get_format_name():
         return "Gsq3"
 
     @staticmethod
     def to_json(params):
-        output_data = generate_json_from_data(params, read_gsq2_data)
-        output_data['format'] = Gsq2Format.get_format_name()
+        output_data = generate_json_from_data(params, read_gsq3_data)
+        output_data['format'] = Gsq3Format.get_format_name()
         return json.dumps(output_data, indent=4, sort_keys=True)
 
     @staticmethod
@@ -106,4 +106,4 @@ class Gsq2Format:
 
 
 def get_class():
-    return Gsq2Format
+    return Gsq3Format
