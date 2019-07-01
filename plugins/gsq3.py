@@ -12,6 +12,9 @@ def read_gsq3_data(data, events, other_params):
         param3 = cmd & 0xff0f
         cmd &= 0xf0
 
+        if timestamp == 0xffffffff:
+            return None
+
         event_name = EVENT_ID_MAP[cmd]
 
         if cmd in [0x00, 0x20, 0x40, 0x60]:
