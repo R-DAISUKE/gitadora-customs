@@ -81,7 +81,7 @@ def read_gsq2_data(data, events, other_params):
 class Gsq2Format:
     @staticmethod
     def get_format_name():
-        return "Gsq2"
+        return "Gsq3"
 
     @staticmethod
     def to_json(params):
