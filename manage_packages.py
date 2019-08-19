@@ -291,7 +291,7 @@ def add_song_to_mdb(mdb, package, fresh=False, unsafe=False):
         },
         'contain_stat': {
             'type': "u8",
-            'value': [1 if 'guitar' in package['files'] else 0, 1 if 'drum' in package['files'] else 0]
+            'value': [2 if 'guitar' in package['files'] else 0, 2 if 'drum' in package['files'] else 0]
         },
     }
 
