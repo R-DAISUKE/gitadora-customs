@@ -2481,6 +2481,8 @@ def generate_dtx_info(chart_data, sound_metadata, game_type):
 
 
 def generate_dtx_chart_from_json(metadata, orig_chart_data, sound_metadata, params):
+    # 2019.8.19 R-DAISUKE 命令の記述順をDTXCreator基準に変更
+
     game_type = orig_chart_data['header']['game_type']
 
     chart_data = generate_metadata_fields(metadata, orig_chart_data, params.get('dtx_fake_timesigs', False))
@@ -2502,7 +2504,22 @@ def generate_dtx_chart_from_json(metadata, orig_chart_data, sound_metadata, para
         output.append("#ARTIST %s" % orig_chart_data['header']['artist'])
     else:
         output.append("#ARTIST (no artist)")
+        
+    if 'level' in orig_chart_data['header']:
+        has_drum = "drum" in orig_chart_data['header']['level']
+        has_guitar = "guitar" in orig_chart_data['header']['level']
+        has_bass = "bass" in orig_chart_data['header']['level']
+        has_open = "open" in orig_chart_data['header']['level']
+        if has_drum:
+            output.append("#PREVIEW i%04ddm.wav" % orig_chart_data['header']['musicid'])
+        elif has_guitar or has_bass or has_open:
+            output.append("#PREVIEW i%04dgf.wav" % orig_chart_data['header']['musicid'])
+            
+    output.append("#PREIMAGE img_jk%04d.png" % orig_chart_data['header']['musicid'])
 
+    output.append("#BPM %s" % (bpms[0]))
+
+    # TODO:3桁レベル指定からLEVELDEC指定への変更(Ver.K 4.00系では廃止、Ver3.60系でも非推奨)
     if 'level' in orig_chart_data['header']:
         for k in orig_chart_data['header']['level']:
             level_map = {
@@ -2513,20 +2530,9 @@ def generate_dtx_chart_from_json(metadata, orig_chart_data, sound_metadata, para
             }
             output.append("#%s %s" % (level_map[k], orig_chart_data['header']['level'][k]))
 
-    if 'level' in orig_chart_data['header']:
-        has_drum = "drum" in orig_chart_data['header']['level']
-        has_guitar = "guitar" in orig_chart_data['header']['level']
-        has_bass = "bass" in orig_chart_data['header']['level']
-        has_open = "open" in orig_chart_data['header']['level']
-        if has_drum:
-            output.append("#PREVIEW i%04ddm.wav" % orig_chart_data['header']['musicid'])
-        elif has_guitar or has_bass or has_open:
-            output.append("#PREVIEW i%04dgf.wav" % orig_chart_data['header']['musicid'])
+    output.append("") # 2019.8.19 R-DAISUKE 改行
 
-    output.append("#PREIMAGE img_jk%04d.png" % orig_chart_data['header']['musicid'])
-    output.append("#AVIZZ mv%04d.avi" % orig_chart_data['header']['musicid'])
-
-    output.append("#BPM %s" % (bpms[0]))
+    # TODO:BPM変化が無い場合はBPMxxを出力しない、BPMチップを配置しない
     for i in range(0, len(bpms)):
         output.append("#BPM%s %s" % (base_repr(i+1, 36, padding=2).upper()[-2:], bpms[i]))
 
@@ -2570,12 +2576,20 @@ def generate_dtx_chart_from_json(metadata, orig_chart_data, sound_metadata, para
                                           bgm_filename_part)
 
     output.append("#WAVZZ %s" % bgm_filename)
-
+    
+    # TODO:VOLUME値が0なら該当するPANを出力しない
     for k in sorted(volumes.keys()):
         output.append("#VOLUME%s %d" % (base_repr(int(k), 36, padding=2).upper()[-2:], volumes[k]))
 
+    # TODO:PAN値が0なら該当するPANを出力しない
     for k in sorted(pans.keys()):
         output.append("#PAN%s %d" % (base_repr(int(k), 36, padding=2).upper()[-2:], pans[k]))
+
+    output.append("") # 2019.8.19 R-DAISUKE 改行
+    
+    output.append("#AVIZZ mv%04d.mp4" % orig_chart_data['header']['musicid']) # 2019.8.19 R-DAISUKE mp4を使うよう変更(フォーマット指定できる形が一番いいが...)
+
+    output.append("") # 2019.8.19 R-DAISUKE 改行
 
     output.append("#00001: ZZ")
     output.append("#00054: ZZ")
